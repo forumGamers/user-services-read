@@ -4,7 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx jest --runInBand --forceExit --coverage",
+    "start": "node build/bin/www.js",
+    "dev": "nodemon src/bin/www.ts --exec ts-node src/bin/www.ts",
+    "build": "tsc",
+    "serve": "npm run build && npm start",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "docker-dev-up": "docker-compose -f docker-compose.dev.yml up -d",
+    "docker-dev-down": "docker-compose -f docker-compose.dev.yml down"
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "npm run format",
+      "npx eslint --fix src/**/*.ts"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "repository": {
     "type": "git",

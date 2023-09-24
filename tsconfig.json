@@ -10,7 +10,7 @@
     "resolveJsonModule": true
   },
   "include": ["src", "__test__", "src/types/*.d.ts"],
-  "exclude": ["src/__test__/*"],
+  "exclude": ["src/__test__/*", "src/interfaces/*"],
   "ts-node": {
     "transpileOnly": true,
     "files": true

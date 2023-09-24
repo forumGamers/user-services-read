@@ -1,0 +1,49 @@
+version: '3'
+services:
+  cassandra-primary:
+    image: cassandra:latest
+    container_name: user-services-cassandra-primary
+    ports:
+      - 9042:9042
+    environment:
+      - CASSANDRA_CLUSTER_NAME=user-services
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=node-primary
+      - CASSANDRA_DC=DC-primary
+      - CASSANDRA_RACK=Rack-primary
+      - MAX_HEAP_SIZE=256M
+      - HEAP_NEWSIZE=100M
+    volumes:
+      - ./data/cassandra-primary:/var/lib/cassandra
+
+  cassandra-secondary:
+    environment:
+      - CASSANDRA_CLUSTER_NAME=user-services
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=node-secondary
+      - CASSANDRA_DC=DC-secondary
+      - CASSANDRA_RACK=Rack-secondary
+      - MAX_HEAP_SIZE=256M
+      - HEAP_NEWSIZE=100M
+    image: cassandra:latest
+    depends_on:
+      - cassandra-primary
+    container_name: user-services-cassandra-secondary
+    volumes:
+      - ./data/cassandra-secondary:/var/lib/cassandra
+
+  cassandra-tertiary:
+    environment:
+      - CASSANDRA_CLUSTER_NAME=user-services
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=node-tertiary
+      - CASSANDRA_DC=DC-tertiary
+      - CASSANDRA_RACK=Rack-tertiary
+      - MAX_HEAP_SIZE=256M
+      - HEAP_NEWSIZE=100M
+    image: cassandra:latest
+    depends_on:
+      - cassandra-primary
+    container_name: user-services-cassandra-tertiary
+    volumes:
+      - ./data/cassandra-tertiary:/var/lib/cassandra
