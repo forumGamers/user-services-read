@@ -8,7 +8,7 @@ services:
     environment:
       - CASSANDRA_CLUSTER_NAME=user-services
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_SEEDS=node-primary
+      - CASSANDRA_SEEDS=user-services-cassandra-primary
       - CASSANDRA_DC=DC-primary
       - CASSANDRA_RACK=Rack-primary
       - MAX_HEAP_SIZE=256M
@@ -20,7 +20,7 @@ services:
     environment:
       - CASSANDRA_CLUSTER_NAME=user-services
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_SEEDS=node-secondary
+      - CASSANDRA_SEEDS=cassandra-secondary
       - CASSANDRA_DC=DC-secondary
       - CASSANDRA_RACK=Rack-secondary
       - MAX_HEAP_SIZE=256M
@@ -36,7 +36,7 @@ services:
     environment:
       - CASSANDRA_CLUSTER_NAME=user-services
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_SEEDS=node-tertiary
+      - CASSANDRA_SEEDS=cassandra-tertiary
       - CASSANDRA_DC=DC-tertiary
       - CASSANDRA_RACK=Rack-tertiary
       - MAX_HEAP_SIZE=256M

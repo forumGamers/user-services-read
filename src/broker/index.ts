@@ -1,13 +1,8 @@
-import { Channel, connect, Connection } from "amqplib";
+import { connect } from "amqplib";
 import AppError from "../base/error";
-
-abstract class RabbitMQProperty {
-  protected connection!: Connection;
-  protected channel!: Channel;
-  protected connectionString =
-    (process.env.RABBITMQURL as string) ||
-    "amqp://user:password@localhost:5673";
-}
+import user from "../interfaces/model";
+import RabbitMQProperty from "./constant";
+import cassandra from "../database";
 
 class RabbitMQ extends RabbitMQProperty {
   public async connect() {
@@ -22,6 +17,22 @@ class RabbitMQ extends RabbitMQProperty {
 
   constructor() {
     super();
+  }
+
+  public ConsumeNewUser() {
+    this.channel.consume(this.newUserQueue, async (msg) => {
+      if (msg) {
+        const user: user = JSON.parse(msg.content.toString());
+
+        user.created_at = new Date(user.created_at);
+        user.updated_at = new Date(user.updated_at);
+        user.division = "" as any;
+        user.role = "" as any;
+        console.log({ user });
+        await cassandra.insertOne(user);
+        this.channel.ack(msg);
+      }
+    });
   }
 }
 
