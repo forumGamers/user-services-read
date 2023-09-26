@@ -8,4 +8,5 @@ export default abstract class RabbitMQProperty {
     "amqp://user:password@localhost:5673";
 
   protected newUserQueue = "New-User-Queue";
+  protected loginUserQueue = "Login-User-Queue";
 }

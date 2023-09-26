@@ -1,6 +1,6 @@
 import { Client } from "cassandra-driver";
 import AppError from "../base/error";
-import user from "../interfaces/model";
+import user, { Token } from "../interfaces/model";
 
 class Cassandra {
   private client: Client;
@@ -28,7 +28,7 @@ class Cassandra {
     }
   }
 
-  public async createTable() {
+  public async createTableUser() {
     try {
       await this.client.execute(
         `CREATE TABLE IF NOT EXISTS users (
@@ -40,13 +40,31 @@ class Cassandra {
             is_verified BOOLEAN,
             bio TEXT,
             image_url TEXT,
+            image_id TEXT,
             background_url TEXT,
+            background_id TEXT,
             status TEXT,
             created_at TIMESTAMP,
             updated_at TIMESTAMP,
             store_id UUID,
             division TEXT,
             role TEXT
+        );`
+      );
+    } catch (err) {
+      throw new AppError({ message: err as any, statusCode: 502 });
+    }
+  }
+
+  public async createTableToken() {
+    try {
+      await this.client.execute(
+        `CREATE TABLE IF NOT EXISTS tokens (
+            access_token TEXT PRIMARY KEY,
+            user_id UUID,
+            as TEXT,
+            created_at TIMESTAMP,
+            updated_at TIMESTAMP,
         );`
       );
     } catch (err) {
@@ -103,6 +121,25 @@ class Cassandra {
         division,
         role,
       ]
+    );
+  }
+
+  public async insertOneToken({
+    access_token,
+    user_id,
+    as,
+    created_at,
+    updated_at,
+  }: Token) {
+    return await this.client.execute(
+      `INSERT INTO tokens (
+        access_token,
+        user_id,
+        as,
+        created_at,
+        updated_at
+    ) VALUES (?, ?, ?, ?, ?);`,
+      [access_token, user_id, as, created_at, updated_at]
     );
   }
 }

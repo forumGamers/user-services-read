@@ -9,9 +9,11 @@ import cassandra from "../database";
 (async function () {
   try {
     await broker.connect();
-    broker.ConsumeNewUser();
     await cassandra.createKeySpace();
-    await cassandra.createTable();
+    await cassandra.createTableUser();
+    await cassandra.createTableToken();
+    broker.ConsumeNewUser();
+    broker.ConsumeLoginUser();
 
     const port = process.env.PORT ?? 3002;
 
