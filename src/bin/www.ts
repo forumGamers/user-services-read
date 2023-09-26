@@ -3,15 +3,13 @@ import { config } from "dotenv";
 config();
 
 import app from "..";
-import broker from "../broker";
-import cassandra from "../database";
+import broker from "../broker/user";
+import Cassandra from "../database";
 
 (async function () {
   try {
     await broker.connect();
-    await cassandra.createKeySpace();
-    await cassandra.createTableUser();
-    await cassandra.createTableToken();
+    await new Cassandra().initDatabase();
     broker.ConsumeNewUser();
     broker.ConsumeLoginUser();
 

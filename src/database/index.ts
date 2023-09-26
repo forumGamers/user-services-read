@@ -1,9 +1,8 @@
 import { Client } from "cassandra-driver";
 import AppError from "../base/error";
-import user, { Token } from "../interfaces/model";
 
-class Cassandra {
-  private client: Client;
+export default class Cassandra {
+  protected client: Client;
 
   constructor() {
     this.client = new Client({
@@ -13,7 +12,7 @@ class Cassandra {
     });
   }
 
-  public async createKeySpace() {
+  private async createKeySpace() {
     try {
       await this.client.execute(
         `CREATE KEYSPACE IF NOT EXISTS "user_service"
@@ -28,7 +27,7 @@ class Cassandra {
     }
   }
 
-  public async createTableUser() {
+  private async createTableUser() {
     try {
       await this.client.execute(
         `CREATE TABLE IF NOT EXISTS users (
@@ -56,7 +55,7 @@ class Cassandra {
     }
   }
 
-  public async createTableToken() {
+  private async createTableToken() {
     try {
       await this.client.execute(
         `CREATE TABLE IF NOT EXISTS tokens (
@@ -72,76 +71,9 @@ class Cassandra {
     }
   }
 
-  public async insertOne({
-    id,
-    fullname,
-    username,
-    password,
-    is_verified,
-    bio,
-    image_url,
-    background_url,
-    status,
-    created_at,
-    updated_at,
-    store_id,
-    division,
-    role,
-  }: user) {
-    return await this.client.execute(
-      `INSERT INTO users (
-        id, 
-        fullname, 
-        username, 
-        password, 
-        is_verified, 
-        bio, 
-        image_url, 
-        background_url, 
-        status, 
-        created_at, 
-        updated_at, 
-        store_id, 
-        division, 
-        role
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-      [
-        id,
-        fullname,
-        username,
-        password,
-        is_verified,
-        bio,
-        image_url,
-        background_url,
-        status,
-        created_at,
-        updated_at,
-        store_id,
-        division,
-        role,
-      ]
-    );
-  }
-
-  public async insertOneToken({
-    access_token,
-    user_id,
-    as,
-    created_at,
-    updated_at,
-  }: Token) {
-    return await this.client.execute(
-      `INSERT INTO tokens (
-        access_token,
-        user_id,
-        as,
-        created_at,
-        updated_at
-    ) VALUES (?, ?, ?, ?, ?);`,
-      [access_token, user_id, as, created_at, updated_at]
-    );
+  public async initDatabase() {
+    await this.createKeySpace();
+    await this.createTableUser();
+    await this.createTableToken();
   }
 }
-
-export default new Cassandra();
