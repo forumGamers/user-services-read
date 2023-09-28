@@ -1,8 +1,6 @@
 import user from "../interfaces/user";
 import RabbitMQProperty from "./constant";
 import User from "../database/user";
-import token from "../interfaces/token";
-import Token from "../database/token";
 
 class UserConsumer extends RabbitMQProperty {
   constructor() {
@@ -19,6 +17,8 @@ class UserConsumer extends RabbitMQProperty {
           user.updated_at = new Date(user.updated_at);
           user.division = "" as any;
           user.role = "" as any;
+          user.following = [] as string[];
+          user.followers = [] as string[];
           await User.insertOne(user);
           this.channel.ack(msg);
         }
@@ -32,12 +32,11 @@ class UserConsumer extends RabbitMQProperty {
     this.channel.consume(this.loginUserQueue, async (msg) => {
       try {
         if (msg) {
-          const token: token = JSON.parse(msg.content.toString());
-
-          token.created_at = new Date(token.created_at);
-          token.updated_at = new Date(token.updated_at);
-          await Token.insertOne(token);
-          this.channel.ack(msg);
+          // const token: token = JSON.parse(msg.content.toString());
+          // token.created_at = new Date(token.created_at);
+          // token.updated_at = new Date(token.updated_at);
+          // await Token.insertOne(token);
+          // this.channel.ack(msg);
         }
       } catch (err) {
         console.error(err);

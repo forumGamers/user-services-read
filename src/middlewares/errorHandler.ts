@@ -7,7 +7,7 @@ class ErrorHandler {
     err: ApplicationError,
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): void {
     let message = err.message ?? "Internal Server Error";
     let code = (err as ApplicationError).statusCode ?? 500;

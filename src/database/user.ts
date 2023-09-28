@@ -21,6 +21,8 @@ class User extends Cassandra {
     store_id,
     division,
     role,
+    following,
+    followers,
   }: user) {
     return await this.client.execute(
       `INSERT INTO users (
@@ -37,8 +39,10 @@ class User extends Cassandra {
             updated_at, 
             store_id, 
             division, 
-            role
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+            role,
+            following,
+            followers
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         id,
         fullname,
@@ -54,7 +58,9 @@ class User extends Cassandra {
         store_id,
         division,
         role,
-      ]
+        following,
+        followers,
+      ],
     );
   }
 
@@ -66,7 +72,7 @@ class User extends Cassandra {
       WHERE id IN (${Array(ids.length).fill("?").join(", ")});
       `,
       ids,
-      { prepare: true }
+      { prepare: true },
     );
   }
 }

@@ -2,13 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import AppError from "../base/error";
 import User from "../database/user";
 import response from "../middlewares/response";
-import FollowingUser from "../database/followingUser";
 
 export default class Controller {
   public static async getMultipleByIds(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const { ids } = req.query as Record<string, string>;
@@ -26,7 +25,7 @@ export default class Controller {
         if (
           !data.includes(el) &&
           /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(
-            el
+            el,
           ) &&
           el
         )
@@ -39,15 +38,10 @@ export default class Controller {
       if (!users.rowLength)
         throw new AppError({ message: "Data not found", statusCode: 404 });
 
-      const followed = await FollowingUser.checkIsFollow(data);
-
       response({
         res,
         code: 200,
-        data: users.rows.map((el) => ({
-          ...el,
-          isFollow: !!followed.rows.find((el) => el.target === ""),
-        })),
+        data: users.rows,
       });
     } catch (err) {
       next(err);

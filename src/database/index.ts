@@ -20,7 +20,7 @@ export default class Cassandra {
         'class': 'SimpleStrategy',
         'replication_factor': 1
         };
-    `
+    `,
       );
     } catch (err) {
       throw new AppError({ message: err as any, statusCode: 502 });
@@ -47,59 +47,20 @@ export default class Cassandra {
             updated_at TIMESTAMP,
             store_id UUID,
             division TEXT,
-            role TEXT
-        );`
+            role TEXT,
+            following SET<UUID>,
+            followers SET<UUID>,
+            access_token TEXT,
+            token_as TEXT
+        );`,
       );
     } catch (err) {
       throw new AppError({ message: err as any, statusCode: 502 });
     }
-  }
-
-  private async createTableToken() {
-    try {
-      await this.client.execute(
-        `CREATE TABLE IF NOT EXISTS tokens (
-            access_token TEXT PRIMARY KEY,
-            user_id UUID,
-            as TEXT,
-            created_at TIMESTAMP,
-            updated_at TIMESTAMP
-        );`
-      );
-    } catch (err) {
-      throw new AppError({ message: err as any, statusCode: 502 });
-    }
-  }
-
-  private async createTableFollowingUser() {
-    await this.client.execute(
-      `CREATE TABLE IF NOT EXISTS following_users (
-            id UUID PRIMARY KEY,
-            user_id UUID,
-            target UUID,
-            created_at TIMESTAMP,
-            updated_at TIMESTAMP
-        );`
-    );
-  }
-
-  private async createTableFollowingStore() {
-    await this.client.execute(
-      `CREATE TABLE IF NOT EXISTS following_stores (
-            id UUID PRIMARY KEY,
-            user_id UUID,
-            target TEXT,
-            created_at TIMESTAMP,
-            updated_at TIMESTAMP
-        );`
-    );
   }
 
   public async initDatabase() {
     await this.createKeySpace();
     await this.createTableUser();
-    await this.createTableToken();
-    await this.createTableFollowingUser();
-    await this.createTableFollowingStore();
   }
 }
