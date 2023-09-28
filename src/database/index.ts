@@ -63,7 +63,7 @@ export default class Cassandra {
             user_id UUID,
             as TEXT,
             created_at TIMESTAMP,
-            updated_at TIMESTAMP,
+            updated_at TIMESTAMP
         );`
       );
     } catch (err) {
@@ -71,9 +71,35 @@ export default class Cassandra {
     }
   }
 
+  private async createTableFollowingUser() {
+    await this.client.execute(
+      `CREATE TABLE IF NOT EXISTS following_users (
+            id UUID PRIMARY KEY,
+            user_id UUID,
+            target UUID,
+            created_at TIMESTAMP,
+            updated_at TIMESTAMP
+        );`
+    );
+  }
+
+  private async createTableFollowingStore() {
+    await this.client.execute(
+      `CREATE TABLE IF NOT EXISTS following_stores (
+            id UUID PRIMARY KEY,
+            user_id UUID,
+            target TEXT,
+            created_at TIMESTAMP,
+            updated_at TIMESTAMP
+        );`
+    );
+  }
+
   public async initDatabase() {
     await this.createKeySpace();
     await this.createTableUser();
     await this.createTableToken();
+    await this.createTableFollowingUser();
+    await this.createTableFollowingStore();
   }
 }

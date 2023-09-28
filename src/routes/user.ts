@@ -1,9 +1,9 @@
 import BaseRoutes from "../base/router";
-import user from "./user";
+import Controller from "../controllers/user";
 
 class Routes extends BaseRoutes {
   routes(): void {
-    this.router.use("/user", user);
+    this.router.get("/multiple", Controller.getMultipleByIds);
   }
 }
 
