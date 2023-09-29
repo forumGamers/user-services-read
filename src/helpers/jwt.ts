@@ -1,4 +1,10 @@
-import { JwtPayload, Secret, verify } from "jsonwebtoken";
+import {
+  JwtPayload,
+  Secret,
+  verify,
+  decode,
+  DecodeOptions,
+} from "jsonwebtoken";
 
 export interface jwtValue extends JwtPayload {
   UUID: string;
@@ -14,6 +20,10 @@ class JWT {
 
   public verifyToken(token: string) {
     return verify(token, this.secret) as jwtValue;
+  }
+
+  public decodeToken(token: string, opts?: DecodeOptions) {
+    return decode(token, opts) as jwtValue;
   }
 }
 

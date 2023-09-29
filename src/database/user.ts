@@ -98,6 +98,20 @@ class User extends Cassandra {
       { prepare: true }
     );
   }
+
+  public async getUserById(id: string) {
+    return await this.client.execute(`SELECT * FROM users WHERE id = ?`, [id], {
+      prepare: true,
+    });
+  }
+
+  public async getUserByToken(token: string) {
+    return await this.client.execute(
+      `SELECT * FROM users WHERE access_token = ?`,
+      [token],
+      { prepare: true }
+    );
+  }
 }
 
 export default new User();

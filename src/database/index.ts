@@ -20,7 +20,7 @@ export default class Cassandra {
         'class': 'SimpleStrategy',
         'replication_factor': 1
         };
-    `,
+    `
       );
     } catch (err) {
       throw new AppError({ message: err as any, statusCode: 502 });
@@ -52,7 +52,17 @@ export default class Cassandra {
             followers SET<UUID>,
             access_token TEXT,
             token_as TEXT
-        );`,
+        );`
+      );
+    } catch (err) {
+      throw new AppError({ message: err as any, statusCode: 502 });
+    }
+  }
+
+  private async createAccessTokenIndex() {
+    try {
+      await this.client.execute(
+        `CREATE INDEX IF NOT EXISTS ON users (access_token);`
       );
     } catch (err) {
       throw new AppError({ message: err as any, statusCode: 502 });
@@ -62,5 +72,6 @@ export default class Cassandra {
   public async initDatabase() {
     await this.createKeySpace();
     await this.createTableUser();
+    await this.createAccessTokenIndex();
   }
 }
