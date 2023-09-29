@@ -21,7 +21,7 @@ class Authorize extends BaseAuthMiddleware {
         } catch (err) {
           this.bindRequest(req, null, null);
         }
-      }
+      } else this.bindRequest(req, null, null);
 
       next();
     } catch (err) {
