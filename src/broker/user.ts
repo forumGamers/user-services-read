@@ -32,11 +32,13 @@ class UserConsumer extends RabbitMQProperty {
     this.channel.consume(this.loginUserQueue, async (msg) => {
       try {
         if (msg) {
-          // const token: token = JSON.parse(msg.content.toString());
-          // token.created_at = new Date(token.created_at);
-          // token.updated_at = new Date(token.updated_at);
-          // await Token.insertOne(token);
-          // this.channel.ack(msg);
+          const token = JSON.parse(msg.content.toString());
+          await User.updateToken({
+            access_token: token.access_token,
+            token_as: token.as,
+            id: token.user_id,
+          });
+          this.channel.ack(msg);
         }
       } catch (err) {
         console.error(err);

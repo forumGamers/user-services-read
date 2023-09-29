@@ -41,8 +41,10 @@ class User extends Cassandra {
             division, 
             role,
             following,
-            followers
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+            followers,
+            access_token,
+            token_as
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         id,
         fullname,
@@ -60,7 +62,28 @@ class User extends Cassandra {
         role,
         following,
         followers,
-      ],
+        "",
+        "",
+      ]
+    );
+  }
+
+  public async updateToken({
+    access_token,
+    token_as,
+    id,
+  }: {
+    access_token: string;
+    token_as: "User" | "Admin" | "Seller";
+    id: string;
+  }) {
+    return await this.client.execute(
+      `
+      UPDATE users
+      SET access_token = ?, token_as = ?
+      WHERE id = ?
+      `,
+      [access_token, token_as, id]
     );
   }
 
@@ -72,7 +95,7 @@ class User extends Cassandra {
       WHERE id IN (${Array(ids.length).fill("?").join(", ")});
       `,
       ids,
-      { prepare: true },
+      { prepare: true }
     );
   }
 }
