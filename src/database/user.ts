@@ -90,8 +90,7 @@ class User extends Cassandra {
   public async getUserProfileByIds(ids: string[]) {
     return await this.client.execute(
       `
-      SELECT id, username, fullname, image_url, background_url, image_id, background_id, bio
-      FROM users
+      SELECT * FROM users
       WHERE id IN (${Array(ids.length).fill("?").join(", ")});
       `,
       ids,

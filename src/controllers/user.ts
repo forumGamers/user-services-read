@@ -7,10 +7,11 @@ export default class Controller {
   public static async getMultipleByIds(
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
   ) {
     try {
       const { ids } = req.query as Record<string, string>;
+      const { author } = req.user;
 
       if (!ids)
         throw new AppError({
@@ -25,7 +26,7 @@ export default class Controller {
         if (
           !data.includes(el) &&
           /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(
-            el,
+            el
           ) &&
           el
         )
@@ -41,7 +42,16 @@ export default class Controller {
       response({
         res,
         code: 200,
-        data: users.rows,
+        data: users.rows.map((el) => ({
+          ...el,
+          isFollowing:
+            el.followers &&
+            el.followers.length &&
+            author !== null &&
+            el.followers.find((el: string) => el === author?.id)
+              ? true
+              : false,
+        })),
       });
     } catch (err) {
       next(err);
