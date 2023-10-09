@@ -57,4 +57,8 @@ export default class Controller {
       next(err);
     }
   }
+
+  public static async getUserData(req: Request, res: Response): Promise<void> {
+    response({ res, code: 200, data: req.user.author });
+  }
 }
