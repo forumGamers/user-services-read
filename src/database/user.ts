@@ -10,6 +10,7 @@ class User extends Cassandra {
     id,
     fullname,
     username,
+    email,
     password,
     is_verified,
     bio,
@@ -28,7 +29,8 @@ class User extends Cassandra {
       `INSERT INTO users (
             id, 
             fullname, 
-            username, 
+            username,
+            email, 
             password, 
             is_verified, 
             bio, 
@@ -44,11 +46,12 @@ class User extends Cassandra {
             followers,
             access_token,
             token_as
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         id,
         fullname,
         username,
+        email,
         password,
         is_verified,
         bio,
