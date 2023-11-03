@@ -4,12 +4,10 @@ config();
 
 import app from "..";
 import broker from "../broker/user";
-import Cassandra from "../database";
 
-(async function () {
+(async () => {
   try {
     await broker.connect();
-    await new Cassandra().initDatabase();
     broker.ConsumeNewUser();
     broker.ConsumeLoginUser();
 

@@ -1,10 +1,8 @@
-import Cassandra from ".";
+import cassandra from ".";
 import user from "../interfaces/user";
 
-class User extends Cassandra {
-  constructor() {
-    super();
-  }
+export default new (class User {
+  private client = cassandra;
 
   public async insertOne({
     id,
@@ -114,6 +112,4 @@ class User extends Cassandra {
       { prepare: true }
     );
   }
-}
-
-export default new User();
+})();
