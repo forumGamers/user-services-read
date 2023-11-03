@@ -79,7 +79,7 @@ export default class Controller {
         res,
         code: 200,
         data: data.rows.filter(
-          (row) => !(author?.following || []).includes(row.id)
+          (row) => !(author?.following || []).includes(row.id.toString())
         ),
       });
     } catch (err) {
