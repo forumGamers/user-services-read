@@ -35,4 +35,5 @@ import cassandra from "../database";
     default:
       break;
   }
+  await cassandra.shutdown();
 })();

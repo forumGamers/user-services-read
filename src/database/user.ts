@@ -1,5 +1,6 @@
 import cassandra from ".";
 import user from "../interfaces/user";
+import helper from "../helpers/global";
 
 export default new (class User {
   private client = cassandra;
@@ -109,6 +110,16 @@ export default new (class User {
     return await this.client.execute(
       `SELECT * FROM users WHERE access_token = ?`,
       [token],
+      { prepare: true }
+    );
+  }
+
+  public async getFollowingRecomendation() {
+    return await this.client.execute(
+      helper.queryLog(
+        `SELECT * FROM users WHERE created_at >= dateOf(now()) - 7d AND created_at <= dateOf(now()) LIMIT 30 ALLOW FILTERING;`
+      ),
+      [],
       { prepare: true }
     );
   }

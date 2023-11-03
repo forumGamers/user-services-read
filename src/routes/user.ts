@@ -7,6 +7,11 @@ class Routes extends BaseRoutes {
   routes(): void {
     this.router
       .get("/multiple", authorization, Controller.getMultipleByIds)
+      .get(
+        "/following-recomendation",
+        authentication,
+        Controller.getUserFollowingRecomendation
+      )
       .get("/me", authentication, Controller.getUserData);
   }
 }

@@ -61,4 +61,29 @@ export default class Controller {
   public static async getUserData(req: Request, res: Response): Promise<void> {
     response({ res, code: 200, data: req.user.author });
   }
+
+  public static async getUserFollowingRecomendation(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { author } = req.user;
+
+      const data = await User.getFollowingRecomendation();
+
+      if (!data.rowLength)
+        throw new AppError({ message: "Data not found", statusCode: 404 });
+
+      response({
+        res,
+        code: 200,
+        data: data.rows.filter(
+          (row) => !(author?.following || []).includes(row.id)
+        ),
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
