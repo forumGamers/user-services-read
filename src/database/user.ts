@@ -1,8 +1,9 @@
 import cassandra from ".";
-import user from "../interfaces/user";
+import type user from "../interfaces/user";
 import helper from "../helpers/global";
+import type { IUserDB } from "../interfaces/database";
 
-export default new (class User {
+export default new (class implements IUserDB {
   private client = cassandra;
 
   public async insertOne({

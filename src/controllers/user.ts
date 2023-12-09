@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import AppError from "../base/error";
 import User from "../database/user";
 import response from "../middlewares/response";
+import type { IUserController } from "../interfaces/controllers";
 
-export default class Controller {
-  public static async getMultipleByIds(
+export default new (class implements IUserController {
+  public async getMultipleByIds(
     req: Request,
     res: Response,
     next: NextFunction
@@ -58,11 +59,11 @@ export default class Controller {
     }
   }
 
-  public static async getUserData(req: Request, res: Response): Promise<void> {
+  public async getUserData(req: Request, res: Response): Promise<void> {
     response({ res, code: 200, data: req.user.author });
   }
 
-  public static async getUserFollowingRecomendation(
+  public async getUserFollowingRecomendation(
     req: Request,
     res: Response,
     next: NextFunction
@@ -86,4 +87,22 @@ export default class Controller {
       next(err);
     }
   }
-}
+
+  public async getUserById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+
+      const user = await User.getUserById(id);
+      if (!user.rowLength)
+        throw new AppError({ message: "Data not found", statusCode: 404 });
+
+      response({ res, code: 200, message: "OK", data: user.first() });
+    } catch (err) {
+      next(err);
+    }
+  }
+})();

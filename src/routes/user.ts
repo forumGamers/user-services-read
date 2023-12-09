@@ -12,7 +12,8 @@ class Routes extends BaseRoutes {
         authentication,
         Controller.getUserFollowingRecomendation
       )
-      .get("/me", authentication, Controller.getUserData);
+      .get("/me", authentication, Controller.getUserData)
+      .get("/:id", authentication, Controller.getUserById);
   }
 }
 
