@@ -113,6 +113,22 @@ export default new (class implements IUserDB {
     );
   }
 
+  public async updateUserBackgroundImg(
+    id: string,
+    backgroundUrl: string,
+    backgroundId: string
+  ) {
+    return await this.client.execute(
+      `
+      UPDATE users
+      SET background_url = ?, background_id = ?
+      WHERE id = ?
+      `,
+      [backgroundUrl, backgroundId, id],
+      { prepare: true }
+    );
+  }
+
   public async getUserById(id: string) {
     return await this.client.execute(`SELECT * FROM users WHERE id = ?`, [id], {
       prepare: true,

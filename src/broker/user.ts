@@ -59,6 +59,24 @@ class UserConsumer extends RabbitMQProperty {
       }
     });
   }
+
+  public async consumeChangeBackgroundImg() {
+    this.channel.consume(this.userChangeBackground, async (msg) => {
+      try {
+        if (msg) {
+          const data: user = JSON.parse(msg.content.toString());
+          await User.updateUserImage(
+            data.id,
+            data.background_url,
+            data.background_id
+          );
+          this.channel.ack(msg);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  }
 }
 
 export default new UserConsumer();

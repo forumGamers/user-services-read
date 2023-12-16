@@ -1,4 +1,4 @@
-import { Channel, Connection, connect } from "amqplib";
+import { type Channel,type Connection, connect } from "amqplib";
 import AppError from "../base/error";
 
 export default abstract class RabbitMQProperty {
@@ -11,6 +11,7 @@ export default abstract class RabbitMQProperty {
   protected newUserQueue = "New-User-Queue";
   protected loginUserQueue = "Login-User-Queue";
   protected userChangeProfile = "User-Change-Profile";
+  protected userChangeBackground = "User-Change-Background";
 
   public async connect() {
     try {

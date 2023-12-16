@@ -11,6 +11,7 @@ import broker from "../broker/user";
     broker.ConsumeNewUser();
     broker.ConsumeLoginUser();
     broker.consumeChangeProfileImg();
+    broker.consumeChangeBackgroundImg();
 
     const port = process.env.PORT ?? 3002;
 
