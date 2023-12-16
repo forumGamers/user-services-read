@@ -77,6 +77,20 @@ class UserConsumer extends RabbitMQProperty {
       }
     });
   }
+
+  public async consumeChangeUserInfo() {
+    this.channel.consume(this.userChangeInfo, async (msg) => {
+      try {
+        if (msg) {
+          const data: user = JSON.parse(msg.content.toString());
+          await User.updateUserInfo(data.id, data.username, data.bio);
+          this.channel.ack(msg);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  }
 }
 
 export default new UserConsumer();

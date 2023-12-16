@@ -129,6 +129,18 @@ export default new (class implements IUserDB {
     );
   }
 
+  public async updateUserInfo(id: string, username: string, bio: string) {
+    return await this.client.execute(
+      `
+      UPDATE users 
+      SET username = ?, bio = ?
+      Where id = ?
+      `,
+      [username, bio, id],
+      { prepare: true }
+    );
+  }
+
   public async getUserById(id: string) {
     return await this.client.execute(`SELECT * FROM users WHERE id = ?`, [id], {
       prepare: true,

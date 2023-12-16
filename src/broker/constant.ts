@@ -12,6 +12,7 @@ export default abstract class RabbitMQProperty {
   protected loginUserQueue = "Login-User-Queue";
   protected userChangeProfile = "User-Change-Profile";
   protected userChangeBackground = "User-Change-Background";
+  protected userChangeInfo = "User-Change-Info"
 
   public async connect() {
     try {
